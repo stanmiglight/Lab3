@@ -1,102 +1,198 @@
-# API Interaction and Data Formatting
+# External API Integration with FastAPI
 
-This project demonstrates how to work with external APIs, manipulate their data using Python, and create a custom API with FastAPI. 
+This project demonstrates how to interact with an external API using FastAPI. The goal is to fetch data from an external API, manipulate it using Python, and return the results in a structured JSON format. The project also includes an example of creating a new API endpoint that combines data from multiple external API calls.
 
-### Endpoints
+## Features
 
-#### 1. **Get All Posts or a Specific Post**
-- **GET** `/posts/`
-  - Query Parameter: `postId` (optional)
-  - Returns all posts or a specific post based on the query parameter.
-
-#### 2. **Get All Comments or Comments by Post ID**
-- **GET** `/comments/`
-  - Query Parameter: `postId` (optional)
-  - Returns all comments or comments for a specific post.
-
-#### 3. **Formatted Posts by User ID**
-- **GET** `/formatted_posts/{userID}`
-  - Path Parameter: `userID` (required)
-  - Returns posts for the given user, formatted as:
-    ```json
-    {
-        "userID": <userID>,
-        "posts": [
-            {
-                "post_title": "...",
-                "post_body": "..."
-            }
-        ]
-    }
-    ```
-
-#### 4. **Formatted Comments by Post ID**
-- **GET** `/formatted_comment/{postID}`
-  - Path Parameter: `postID` (required)
-  - Returns comments for the given post, formatted as:
-    ```json
-    {
-        "post_id": <postID>,
-        "comments": [
-            {
-                "commenter_email": "...",
-                "commenter_name": "...",
-                "comment": "..."
-            }
-        ]
-    }
-    ```
-
-#### 5. **Detailed Posts and Comments by User ID**
-- **GET** `/detailed_post/{userID}`
-  - Path Parameter: `userID` (required)
-  - Returns all posts of a user along with comments for each post, formatted as:
-    ```json
-    {
-        "userID": <userID>,
-        "posts": [
-            {
-                "post_title": "...",
-                "post_body": "...",
-                "comments": [
-                    {
-                        "commenter_name": "...",
-                        "commenter_email": "...",
-                        "comment_body": "..."
-                    }
-                ]
-            }
-        ]
-    }
-    ```
+- **FastAPI**: A modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.
+- **External API Integration**: Fetches data from [JSONPlaceholder](https://jsonplaceholder.typicode.com/) to retrieve posts and comments.
+- **Data Manipulation**: Processes and formats the data according to specific requirements.
+- **CRUD-like Operations**: Provides endpoints to retrieve posts, comments, and detailed user posts with associated comments.
 
 ## Installation
 
-1. Clone this repository or download the code.
-2. Install the required Python packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Clone the repository:
 
-## Running the API
+```bash
+git clone https://github.com/yourusername/external-api-integration.git
+cd external-api-integration
+```
 
-Start the FastAPI server locally:
+### Set up a virtual environment (optional but recommended):
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+```
+
+### Install dependencies:
+
+```bash
+pip install fastapi uvicorn requests
+```
+
+### Run the application:
+
 ```bash
 uvicorn main:app --reload
 ```
 
-The API will be available at `http://127.0.0.1:8000`.
+The `--reload` flag enables auto-reloading, so the server will restart whenever you make changes to the code.
 
-## Testing the API
+## Usage
 
-- Open a browser or API testing tool like Postman.
-- Use the provided endpoints to interact with the API and view the JSON responses.
+Once the server is running, you can access the API at `http://127.0.0.1:8000`.
 
-## Notes
+## Endpoints
 
-- This project uses the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) for demonstration purposes.
-- The `requests` library is used to make HTTP calls to the external API.
-- The project showcases how to manipulate JSON data into custom formats and integrate it into new APIs.
+### 1. GET `/posts/`
 
-## Contributions
-Contributions are welcome! Feel free to submit issues or pull requests if you have improvements or suggestions.
+**Description**: Retrieve all posts or a specific post by `postId`.
+
+**Query Parameter:**
+
+- `postId` (optional): The ID of the post to retrieve.
+
+**Example Request:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/posts/"
+```
+
+or
+
+```bash
+curl -X GET "http://127.0.0.1:8000/posts/?postId=1"
+```
+
+**Example Response:**
+
+```json
+[
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+  }
+]
+```
+
+### 2. GET `/comments/`
+
+**Description**: Retrieve all comments or comments for a specific post by `postId`.
+
+**Example Request:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/comments/?postId=1"
+```
+
+**Example Response:**
+
+```json
+[
+  {
+    "postId": 1,
+    "id": 1,
+    "name": "id labore ex et quam laborum",
+    "email": "Eliseo@gardner.biz",
+    "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+  }
+]
+```
+
+### 3. GET `/formatted_posts/{userID}`
+
+**Description**: Retrieve posts for a specific user and format the data.
+
+**Example Request:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/formatted_posts/1"
+```
+
+**Example Response:**
+
+```json
+{
+  "userID": 1,
+  "posts": [
+    {
+      "post_title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      "post_body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    }
+  ]
+}
+```
+
+### 4. GET `/formatted_comment/{postID}`
+
+**Description**: Retrieve comments for a specific post and format the data.
+
+**Example Request:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/formatted_comment/1"
+```
+
+**Example Response:**
+
+```json
+{
+  "post_id": 1,
+  "comments": [
+    {
+      "commenter_email": "Eliseo@gardner.biz",
+      "commenter_name": "id labore ex et quam laborum",
+      "comment": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+    }
+  ]
+}
+```
+
+### 5. GET `/detailed_post/{userID}`
+
+**Description**: Retrieve all posts for a specific user along with their associated comments.
+
+**Example Request:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/detailed_post/1"
+```
+
+**Example Response:**
+
+```json
+{
+  "userID": 1,
+  "posts": [
+    {
+      "post_title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      "post_body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
+      "comments": [
+        {
+          "commenter_name": "id labore ex et quam laborum",
+          "commenter_email": "Eliseo@gardner.biz",
+          "comment_body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- **Sir Paulo** for the idea!
+- **FastAPI** for providing an easy-to-use and high-performance web framework.
+- **JSONPlaceholder** for providing a free fake API for testing and prototyping.
+- **Python** for being awesome.
