@@ -186,9 +186,6 @@ curl -X GET "http://127.0.0.1:8000/detailed_post/1"
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
